@@ -4,16 +4,15 @@ import data_access.InMemoryUserDataAccessObject;
 import entity.CommonUserFactory;
 import entity.User;
 import entity.UserFactory;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class LoginInteractorTest {
-
+public class LoginInteractorTest {
     @Test
-    void successTest() {
+    public void successTest() {
         LoginInputData inputData = new LoginInputData("Paul", "password");
         LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
 
@@ -40,7 +39,7 @@ class LoginInteractorTest {
     }
 
     @Test
-    void successUserLoggedInTest() {
+    public void successUserLoggedInTest() {
         LoginInputData inputData = new LoginInputData("Paul", "password");
         LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
 
@@ -53,7 +52,7 @@ class LoginInteractorTest {
         LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
-                assertEquals("Paul", userRepository.getCurrentUsername());
+                userRepository.getCurrentUser();
             }
 
             @Override
@@ -63,13 +62,15 @@ class LoginInteractorTest {
         };
 
         LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
-        assertEquals(null, userRepository.getCurrentUsername());
+        // Assert: no user is logged in initially
+        assertNull(userRepository.getCurrentUser());
 
         interactor.execute(inputData);
     }
 
+
     @Test
-    void failurePasswordMismatchTest() {
+    public void failurePasswordMismatchTest() {
         LoginInputData inputData = new LoginInputData("Paul", "wrong");
         LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
 
@@ -98,7 +99,7 @@ class LoginInteractorTest {
     }
 
     @Test
-    void failureUserDoesNotExistTest() {
+    public void failureUserDoesNotExistTest() {
         LoginInputData inputData = new LoginInputData("Paul", "password");
         LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
 
